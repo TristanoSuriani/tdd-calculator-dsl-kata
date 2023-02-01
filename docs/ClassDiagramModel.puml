@@ -1,0 +1,67 @@
+@startuml
+
+package Expression {
+
+  interface Expression {
+    +evaluate(): Number
+  }
+
+  interface Operation {
+      -Operator operator (1..1)
+      -Expression expressions(1..n)
+      --
+      +evaluate(): Number
+    }
+
+  class Number {
+    -BigDecimal value (1..1)
+    --
+    +evaluate(): Number
+  }
+
+  enum Operator {
+    PLUS,
+    MINUS,
+    MULTIPLIED_BY,
+    DIVIDED_BY
+  }
+
+  Operation o-down- Expression
+  Operation *-down- Operator
+  Number -up-|> Expression
+  Operation -up-|> Expression
+}
+
+package Parser {
+  class Parser {
+    -Lexer lexer (1..1)
+    --
+    +parse(text: String): Expression
+  }
+
+  class Lexer {
+    +lex(text: String): List<Token>
+  }
+
+  class Token {
+    -TokenType type (1..1)
+    -String value (1..1)
+  }
+
+  class TokenType {
+    IDENTIFIER,
+    L_PAREN,
+    R_PAREN,
+    NUMBER,
+    OPERATOR
+  }
+
+  Parser *-down- Lexer
+  Parser -down-> Expression
+  Lexer -down-> Token
+  Token *-down- TokenType
+  Expression -left-> Number
+}
+
+
+@enduml
