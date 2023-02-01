@@ -19,7 +19,9 @@ public record Operation(Operator operator, List<Expression> expressions) impleme
             case PLUS -> reduceNumber(new Number(BigDecimal.ZERO), Number::add);
             case MINUS -> reduceNumber(new Number(BigDecimal.ZERO), Number::subtract);
             case MULTIPLIED_BY -> reduceNumber(new Number(BigDecimal.ONE), Number::multiplyBy);
-            case DIVIDED_BY -> reduceNumber(Number::divideBy);
+            case DIVIDED_BY -> expressions.size() == 1
+                    ? reduceNumber(new Number(BigDecimal.ONE), Number::divideBy) // (/ 1 n)
+                    : reduceNumber(Number::divideBy);                            // (/ n1 n2 n3... nm)
         };
     }
 

@@ -36,7 +36,7 @@ class ExpressionTest {
     @Test
     void evaluate_operatorDividedBy_number13() {
         var expression = operation(Operator.DIVIDED_BY, 13);
-        assertAreTheSame(number(BigDecimal.valueOf(13)), expression.evaluate());
+        assertAreTheSame(number(BigDecimal.valueOf(1/13)), expression.evaluate());
     }
 
     @Test
