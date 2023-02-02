@@ -6,12 +6,12 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.function.BinaryOperator;
 
-public record Operation(Operator operator, List<Expression> expressions) implements Expression {
+public record Operation(Operator operator, List<Expression> operands) implements Expression {
 
     public Operation {
         Guards.isAssigned(operator);
-        Guards.isNotEmpty(expressions);
-        expressions = List.copyOf(expressions);
+        Guards.isNotEmpty(operands);
+        operands = List.copyOf(operands);
     }
 
     public Number evaluate() {
@@ -19,20 +19,20 @@ public record Operation(Operator operator, List<Expression> expressions) impleme
             case PLUS -> reduce(new Number(BigDecimal.ZERO), Number::add);
             case MINUS -> reduce(new Number(BigDecimal.ZERO), Number::subtract);
             case MULTIPLIED_BY -> reduce(new Number(BigDecimal.ONE), Number::multiplyBy);
-            case DIVIDED_BY -> expressions.size() == 1
+            case DIVIDED_BY -> operands.size() == 1
                     ? reduce(new Number(BigDecimal.ONE), Number::divideBy) // (/ 1 n)
                     : reduce(Number::divideBy);                            // (/ n1 n2 n3... nm)
         };
     }
 
     private Number reduce(Number seed, BinaryOperator<Number> fn) {
-        return expressions.stream()
+        return operands.stream()
                 .map(Expression::evaluate)
                 .reduce(seed, fn);
     }
 
     private Number reduce(BinaryOperator<Number> fn) {
-        return expressions.stream()
+        return operands.stream()
                 .map(Expression::evaluate)
                 .reduce(fn).orElseThrow();
     }

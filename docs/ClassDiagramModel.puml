@@ -8,7 +8,7 @@ package Expression {
 
   interface Operation {
       -Operator operator (1..1)
-      -Expression expressions(1..n)
+      -Expression operands (1..n)
       --
       +evaluate(): Number
     }
