@@ -1,7 +1,6 @@
 package nl.suriani.calculator.dsl.model.compiler;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class ShuntingYardTokenStreamNormaliser {
     public List<Token> normalise(List<Token> inputTokens) {

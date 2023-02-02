@@ -10,7 +10,7 @@ class ShuntingYardTokenStreamNormaliserTest implements TestTokens {
     private final ShuntingYardTokenStreamNormaliser normaliser = new ShuntingYardTokenStreamNormaliser();
 
     @Test
-    void empty() {
+    void emptyStream() {
         var inputTokens = List.<Token>of();
         var outputTokens = normaliser.normalise(inputTokens);
         thenTheTokenStreamIsEmpty(outputTokens);
@@ -139,6 +139,17 @@ class ShuntingYardTokenStreamNormaliserTest implements TestTokens {
     }
 
     @Test
+    void sExpression3() {
+        var inputTokens = List.of(parenthesis("("), operator("+"), number("1"), number("2"),
+                number("3"), parenthesis(")"));
+
+        var outputTokens = normaliser.normalise(inputTokens);
+
+        thenTheTokenStream(outputTokens)
+                .looksLikeThis(number("1"), number("2"), number("3"), operator("+"));
+    }
+
+    @Test
     void identifiers() {
         var inputTokens = List.of(identifier("Fizz"), operator("+"), identifier("Buzz"));
 
@@ -156,5 +167,25 @@ class ShuntingYardTokenStreamNormaliserTest implements TestTokens {
 
         thenTheTokenStream(outputTokens)
                 .looksLikeThis(identifier("Fizz"), number("3"));
+    }
+
+    @Test
+    void reversePolishNotation1() {
+        var inputTokens = List.of(number("1"), number("3"), operator("+"));
+
+        var outputTokens = normaliser.normalise(inputTokens);
+
+        thenTheTokenStream(outputTokens)
+                .looksLikeThis(number("1"), number("3"), operator("+"));
+    }
+
+    @Test
+    void reversePolishNotation2() {
+        var inputTokens = List.of(number("1"), number("3"), operator("*"), operator("+"));
+
+        var outputTokens = normaliser.normalise(inputTokens);
+
+        thenTheTokenStream(outputTokens)
+                .looksLikeThis(number("1"), number("3"), operator("*"), operator("+"));
     }
 }
