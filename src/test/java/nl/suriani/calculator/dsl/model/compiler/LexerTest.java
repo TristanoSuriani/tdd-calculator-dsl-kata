@@ -1,4 +1,4 @@
-package nl.suriani.calculator.dsl.model.parser;
+package nl.suriani.calculator.dsl.model.compiler;
 
 import org.junit.jupiter.api.Test;
 
@@ -6,7 +6,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class LexerTest {
+class LexerTest implements TestTokens {
     private final Lexer lexer = new Lexer();
 
     @Test
@@ -168,42 +168,5 @@ class LexerTest {
                         number("15"),
                         identifier("buzz"),
                         operator("-"), identifier(">"), number("0"));
-    }
-
-    private Token number(String value) {
-        return new Token(TokenType.NUMBER, value);
-    }
-
-    private Token operator(String value) {
-        return new Token(TokenType.OPERATOR, value);
-    }
-
-    private Token identifier(String value) {
-        return new Token(TokenType.IDENTIFIER, value);
-    }
-
-    private Token parenthesis(String parenthesis) {
-        return switch (parenthesis) {
-            case "(" -> new Token(TokenType.L_PAREN, parenthesis);
-            case ")" -> new Token(TokenType.R_PAREN, parenthesis);
-            default -> throw new IllegalArgumentException(parenthesis + " is not a parenthesis");
-        };
-    }
-
-    private void thenTheTokenStreamIsEmpty(List<Token> tokens) {
-        assertNotNull(tokens);
-        assertTrue(tokens.isEmpty());
-    }
-
-    private ThenTheTokenStream thenTheTokenStream(List<Token> tokens) {
-        return new ThenTheTokenStream(tokens);
-    }
-
-    private record ThenTheTokenStream(List<Token> tokens) {
-        public void looksLikeThis(Token... tokens) {
-            assertNotNull(this.tokens);
-            assertNotNull(tokens);
-            assertArrayEquals(tokens, this.tokens.toArray());
-        }
     }
 }

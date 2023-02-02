@@ -1,4 +1,4 @@
-package nl.suriani.calculator.dsl.model.parser;
+package nl.suriani.calculator.dsl.model.compiler;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -32,11 +32,22 @@ package Expression {
   Operation -up-|> Expression
 }
 
-package Parser {
-  class Parser {
-    -Lexer lexer (1..1)
+package Compiler {
+
+  class Compiler {
+    -Lexer lexer(1..1)
+    -ShuntingYardTokenStreamNormaliser normaliser(1..1)
+    -Parser parser(1..1)
     --
-    +parse(text: String): Expression
+    +compile(text: String): Expression
+  }
+
+  class ShuntingYardTokenStreamNormaliser {
+    +normalise(tokens: List<Token>): List<Token>
+  }
+
+  class Parser {
+    +parse(tokens: List<Token>): Expression
   }
 
   class Lexer {
@@ -56,8 +67,10 @@ package Parser {
     OPERATOR
   }
 
-  Parser *-down- Lexer
-  Parser -down-> Expression
+  Compiler *-down- Lexer
+  Compiler *-down- Parser
+  Compiler *-down- ShuntingYardTokenStreamNormaliser
+  Parser -right-> Expression
   Lexer -down-> Token
   Token *-down- TokenType
   Expression -left-> Number
