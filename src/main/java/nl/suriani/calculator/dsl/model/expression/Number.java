@@ -3,6 +3,7 @@ package nl.suriani.calculator.dsl.model.expression;
 import nl.suriani.calculator.dsl.model.shared.Guards;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 
 public record Number(BigDecimal value) implements Expression {
 
@@ -35,6 +36,6 @@ public record Number(BigDecimal value) implements Expression {
         if (other.isSameAs(new Number(BigDecimal.ZERO))) {
             throw new DivideByZeroException();
         }
-        return new Number(value.divideToIntegralValue(other.value()));
+        return new Number(value.divide(other.value(), MathContext.DECIMAL32));
     }
 }

@@ -1,8 +1,15 @@
-package nl.suriani.calculator.dsl.model.compiler;
+package nl.suriani.calculator.dsl.model.calculator;
 
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.List;
 
 public class ShuntingYardTokenStreamNormaliser {
+    /*
+    * Coauthored with ChatGPT, which did the heavy lifting.
+    * */
+
     public List<Token> normalise(List<Token> inputTokens) {
         var operatorsStack = new ArrayDeque<Token>();
         var outputTokens = new ArrayList<Token>();
@@ -10,14 +17,24 @@ public class ShuntingYardTokenStreamNormaliser {
         for (Token token : inputTokens) {
             if (token.isOperand()) {
                 outputTokens.add(token);
-            } else if (token.isOperator()) {
+                continue;
+            }
+
+            if (token.isOperator()) {
                 handleOperator(operatorsStack, outputTokens, token);
-            } else if (token.isLeftParenthesis()) {
+                continue;
+            }
+
+            if (token.isLeftParenthesis()) {
                 operatorsStack.push(token);
-            } else if (token.isRightParenthesis()) {
+                continue;
+            }
+
+            if (token.isRightParenthesis()) {
                 while (!operatorsStack.isEmpty() && !operatorsStack.peek().isLeftParenthesis()) {
                     outputTokens.add(operatorsStack.pop());
                 }
+
                 if (!operatorsStack.isEmpty() && operatorsStack.peek().isLeftParenthesis()) {
                     operatorsStack.pop();
                 } else {
@@ -36,7 +53,7 @@ public class ShuntingYardTokenStreamNormaliser {
         return outputTokens;
     }
 
-    private static void handleOperator(ArrayDeque<Token> operatorsStack, ArrayList<Token> outputTokens, Token token) {
+    private static void handleOperator(Deque<Token> operatorsStack, List<Token> outputTokens, Token token) {
         while (!operatorsStack.isEmpty() &&
                 operatorsStack.peek().isOperator() &&
                 operatorsStack.peek().getPrecedence() >= token.getPrecedence()) {

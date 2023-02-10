@@ -17,7 +17,9 @@ public record Operation(Operator operator, List<Expression> operands) implements
     public Number evaluate() {
         return switch (operator) {
             case PLUS -> reduce(new Number(BigDecimal.ZERO), Number::add);
-            case MINUS -> reduce(new Number(BigDecimal.ZERO), Number::subtract);
+            case MINUS -> operands.size() == 1
+                    ? reduce(new Number(BigDecimal.ZERO), Number::subtract) // (- n)
+                    : reduce(Number::subtract);                             // (- n1 n2 n3... nm)
             case MULTIPLIED_BY -> reduce(new Number(BigDecimal.ONE), Number::multiplyBy);
             case DIVIDED_BY -> operands.size() == 1
                     ? reduce(new Number(BigDecimal.ONE), Number::divideBy) // (/ 1 n)

@@ -1,4 +1,4 @@
-package nl.suriani.calculator.dsl.model.compiler;
+package nl.suriani.calculator.dsl.model.calculator;
 
 public enum TokenType {
     IDENTIFIER,

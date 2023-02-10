@@ -32,21 +32,21 @@ package Expression {
   Operation -up-|> Expression
 }
 
-package Compiler {
+package Calculator {
 
-  class Compiler {
+  class Calculator {
     -Lexer lexer(1..1)
     -ShuntingYardTokenStreamNormaliser normaliser(1..1)
-    -Parser parser(1..1)
+    -ReversePolishNotationInterpreter rpnInterpreter(1..1)
     --
-    +compile(text: String): Expression
+    +evaluate(text: String): String
   }
 
   class ShuntingYardTokenStreamNormaliser {
     +normalise(tokens: List<Token>): List<Token>
   }
 
-  class Parser {
+  class ReversePolishNotationInterpreter {
     +parse(tokens: List<Token>): Expression
   }
 
@@ -67,12 +67,12 @@ package Compiler {
     OPERATOR
   }
 
-  Compiler *-down- Lexer
-  Compiler *-down- Parser
-  Compiler *-down- ShuntingYardTokenStreamNormaliser
-  Parser -right-> Expression
-  Lexer -down-> Token
+  Calculator *-down- Lexer
+  Calculator *-down- ReversePolishNotationInterpreter
+  Calculator *-down- ShuntingYardTokenStreamNormaliser
+  ReversePolishNotationInterpreter -right-> Expression
   Token *-down- TokenType
+  Lexer -down-> Token
   Expression -left-> Number
 }
 

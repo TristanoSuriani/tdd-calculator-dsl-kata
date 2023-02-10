@@ -1,4 +1,4 @@
-package nl.suriani.calculator.dsl.model.compiler;
+package nl.suriani.calculator.dsl.model.calculator;
 
 import org.junit.jupiter.api.Test;
 

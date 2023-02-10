@@ -8,7 +8,7 @@ import java.util.Arrays;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-class ExpressionTest {
+class ExpressionTest implements TestExpression {
     @Test
     void evaluate_number1() {
         var expression = number(1);
@@ -34,9 +34,9 @@ class ExpressionTest {
     }
 
     @Test
-    void evaluate_operatorDividedBy_number13() {
-        var expression = operation(Operator.DIVIDED_BY, 13);
-        assertAreTheSame(number(BigDecimal.valueOf(1/13)), expression.evaluate());
+    void evaluate_operatorDividedBy_number2() {
+        var expression = operation(Operator.DIVIDED_BY, 2);
+        assertAreTheSame(number(BigDecimal.valueOf(0.5)), expression.evaluate());
     }
 
     @Test
@@ -66,34 +66,6 @@ class ExpressionTest {
                operation(Operator.DIVIDED_BY, twoMultipliedBy_onePlus_TwoMultipliedByFour, number(9));
 
         assertAreTheSame(number(2), expression.evaluate());
-    }
-
-    private Expression operation(Operator operator, double... numbers) {
-        var expressions = Arrays.stream(numbers)
-                .mapToObj(BigDecimal::valueOf)
-                .map(Number::new)
-                .map(number -> (Expression) number)
-                .toList();
-
-        return new Operation(operator, expressions);
-    }
-
-    private Expression operation(Operator operator, Expression... expressions) {
-        return new Operation(operator, Arrays.asList(expressions));
-    }
-
-    private Number number(BigDecimal n) {
-        return new Number(n);
-    }
-
-    private Number number(double n) {
-        return new Number(BigDecimal.valueOf(n));
-    }
-
-    private void assertAreTheSame(Number n1, Number n2) {
-        if (!n1.isSameAs(n2)) {
-            throw new AssertionError(String.format("Expected: <%s> but was: <%s>", n1, n2));
-        }
     }
 
 }
